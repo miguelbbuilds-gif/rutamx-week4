@@ -161,7 +161,9 @@ export function ProfileForm({
           <label htmlFor="skills" className="block text-sm font-semibold text-forest-deep">
             Habilidades
           </label>
-          <p className="mt-1 text-xs text-muted">Opcional. Máximo {SKILLS_MAX} caracteres.</p>
+          <p className="mt-1 text-xs text-muted">
+            ¿Qué sabes hacer hoy? Escribe habilidades que ya tienes.
+          </p>
           <textarea
             id="skills"
             name="skills"
@@ -170,7 +172,7 @@ export function ProfileForm({
             value={fields.skills}
             onChange={(e) => onChange({ skills: e.target.value })}
             className="mt-2 w-full resize-y rounded-xl border border-line bg-card px-4 py-3 text-base outline-none ring-forest/30 focus:ring-2"
-            placeholder="Ej. Excel, atención al cliente, redes sociales, herramientas."
+            placeholder="Ej. Cobrar en caja, usar Excel, armar pedidos, atender WhatsApp."
           />
           <div className="mt-1 flex justify-between text-xs text-muted">
             <FieldError message={errors.skills} />
@@ -182,7 +184,9 @@ export function ProfileForm({
 
         <fieldset>
           <legend className="text-sm font-semibold text-forest-deep">Intereses</legend>
-          <p className="mt-1 text-xs text-muted">Elige uno o más.</p>
+          <p className="mt-1 text-xs text-muted">
+            ¿Qué áreas te gustaría explorar? Puedes elegir una o más.
+          </p>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-2">
             {INTERESTS.map((interest) => {
               const selected = fields.interests.includes(interest);
