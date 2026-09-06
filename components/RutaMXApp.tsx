@@ -8,8 +8,10 @@ import { ResultsView } from "@/components/ResultsView";
 import { recommendPaths } from "@/lib/match";
 import type { Interest, MatchedPath, ProfileInput } from "@/lib/types";
 import {
+  AGE_RANGE_ERROR,
   type FieldErrors,
   type FormFields,
+  parseValidAge,
   validateProfileForm,
 } from "@/lib/validate";
 
@@ -85,7 +87,28 @@ export function RutaMXApp() {
             <ProfileForm
               fields={fields}
               errors={errors}
-              onChange={(patch) => setFields((current) => ({ ...current, ...patch }))}
+              onChange={(patch) => {
+                setFields((current) => ({ ...current, ...patch }));
+                if (typeof patch.age === "string") {
+                  const nextAge = patch.age;
+                  setErrors((current) => ({
+                    ...current,
+                    age:
+                      parseValidAge(nextAge) === null
+                        ? AGE_RANGE_ERROR
+                        : undefined,
+                  }));
+                }
+              }}
+              onAgeBlur={() => {
+                setErrors((current) => ({
+                  ...current,
+                  age:
+                    parseValidAge(fields.age) === null
+                      ? AGE_RANGE_ERROR
+                      : undefined,
+                }));
+              }}
               onToggleInterest={toggleInterest}
               onSubmit={submitForm}
             />

@@ -5,6 +5,7 @@ import { MEXICAN_STATES } from "@/lib/states";
 import {
   AGE_MAX,
   AGE_MIN,
+  AGE_RANGE_ERROR,
   EXPERIENCE_MAX,
   SKILLS_MAX,
   type FieldErrors,
@@ -26,12 +27,14 @@ export function ProfileForm({
   onChange,
   onToggleInterest,
   onSubmit,
+  onAgeBlur,
 }: {
   fields: FormFields;
   errors: FieldErrors;
   onChange: (patch: Partial<FormFields>) => void;
   onToggleInterest: (interest: Interest) => void;
   onSubmit: () => void;
+  onAgeBlur: () => void;
 }) {
   return (
     <section
@@ -67,12 +70,22 @@ export function ProfileForm({
             required
             min={AGE_MIN}
             max={AGE_MAX}
+            step={1}
             value={fields.age}
+            aria-invalid={errors.age ? true : undefined}
+            aria-describedby={errors.age ? "age-error" : undefined}
             onChange={(e) => onChange({ age: e.target.value })}
-            className="mt-2 h-12 w-full rounded-xl border border-line bg-card px-4 text-base outline-none ring-forest/30 focus:ring-2"
+            onBlur={onAgeBlur}
+            className={`mt-2 h-12 w-full rounded-xl border bg-card px-4 text-base outline-none ring-forest/30 focus:ring-2 ${
+              errors.age ? "border-terracotta" : "border-line"
+            }`}
             placeholder={`${AGE_MIN}–${AGE_MAX}`}
           />
-          <FieldError message={errors.age} />
+          {errors.age ? (
+            <p id="age-error" className="mt-1.5 text-sm font-medium text-terracotta" role="alert">
+              {AGE_RANGE_ERROR}
+            </p>
+          ) : null}
         </div>
 
         <div>

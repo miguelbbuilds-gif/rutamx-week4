@@ -6,6 +6,20 @@ export const EXPERIENCE_MAX = 300;
 export const SKILLS_MAX = 200;
 export const AGE_MIN = 15;
 export const AGE_MAX = 30;
+export const AGE_RANGE_ERROR = "La edad debe estar entre 15 y 30 años.";
+
+export function parseValidAge(raw: string): number | null {
+  const ageTrimmed = raw.trim();
+  if (!ageTrimmed) return null;
+  if (!/^\d+$/.test(ageTrimmed)) return null;
+
+  const age = Number(ageTrimmed);
+  if (!Number.isInteger(age) || age < AGE_MIN || age > AGE_MAX) {
+    return null;
+  }
+
+  return age;
+}
 
 export type FormFields = {
   age: string;
@@ -29,16 +43,9 @@ export function validateProfileForm(fields: FormFields): {
 } {
   const errors: FieldErrors = {};
 
-  const ageTrimmed = fields.age.trim();
-  if (!ageTrimmed) {
-    errors.age = "Indica tu edad.";
-  } else if (!/^\d+$/.test(ageTrimmed)) {
-    errors.age = "La edad debe ser un número entero.";
-  } else {
-    const age = Number(ageTrimmed);
-    if (age < AGE_MIN || age > AGE_MAX) {
-      errors.age = `La edad debe estar entre ${AGE_MIN} y ${AGE_MAX} años.`;
-    }
+  const age = parseValidAge(fields.age);
+  if (age === null) {
+    errors.age = AGE_RANGE_ERROR;
   }
 
   if (!fields.state) {
@@ -70,14 +77,14 @@ export function validateProfileForm(fields: FormFields): {
     }
   }
 
-  if (Object.keys(errors).length > 0) {
+  if (age === null || Object.keys(errors).length > 0) {
     return { ok: false, errors };
   }
 
   return {
     ok: true,
     profile: {
-      age: Number(ageTrimmed),
+      age,
       state: fields.state,
       education: fields.education as EducationLevel,
       experience: fields.experience.trim(),
